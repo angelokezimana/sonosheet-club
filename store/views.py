@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
-from .models import Artist, Contact, Album, Booking
+from .models import Album, Artist, Booking, Contact
 
 
 def index(request):
@@ -14,7 +14,7 @@ def listing(request):
 
 
 def detail(request, album_id):
-    album = Album.objects.get(pk=album_id)
+    album = get_object_or_404(Album, pk=album_id)
     return render(request, 'store/detail.html', {'album': album})
 
 
