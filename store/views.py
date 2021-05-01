@@ -1,48 +1,33 @@
-# from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render
 
-# from .models import ALBUMS
+from .models import Artist, Contact, Album, Booking
 
 
 def index(request):
-    message = "Learning Django"
-    return HttpResponse(message)
+    albums = Album.objects.filter(available=True).order_by('-created_at')[:10]
+    return render(request, 'store/index.html', {'albums': albums})
 
 
 def listing(request):
-    albums = [f"<li>{ album['name'] }" for album in ALBUMS]
-    message = f"<ul>{ ''.join(albums) }</ul>"
-    return HttpResponse(message)
+    albums = Album.objects.filter(available=True)
+    return render(request, 'store/listing.html', {'albums': albums})
 
 
 def detail(request, album_id):
-    id = int(album_id)
-    album = ALBUMS[id]
-    artists = " ".join([artist['name'] for artist in album['artists']])
-    message = f"Le nom de l'album est { album['name'] }. Il a été écrit par { artists }"
-    return HttpResponse(message)
+    album = Album.objects.get(pk=album_id)
+    return render(request, 'store/detail.html', {'album': album})
 
 
 def search(request):
     query = request.GET.get('query')
+    title = "Résultats pour la requête %s" % query
 
     if not query:
-        message = "Aucun artiste n'est demandé"
+        albums = Album.objects.all()
     else:
-        albums = [
-            album for album in ALBUMS
-            if query in " ".join([artist['name'] for artist in album['artists']])
-        ]
+        albums = Album.objects.filter(title__icontains=query)
 
-        if len(albums) == 0:
-            message = "Misère de misère, nous n'avons trouvé aucun résultat !"
-        else:
-            albums = [f"<li>{ album['name'] }</li>" for album in albums]
-            message = f"""
-                Nous avons trouvé les albums correspondant à votre requête ! Les voici :
-                <ul>
-                    { "".join(albums) }
-                </ul>
-            """
+    if not albums.exists():
+        albums = Album.objects.filter(artists__name__icontains=query)
 
-    return HttpResponse(message)
+    return render(request, 'store/search.html', {'albums': albums, 'title': title})
