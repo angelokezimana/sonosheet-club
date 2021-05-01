@@ -1,5 +1,7 @@
 <div class="text-center h2">{{ list_title }}</div>
 
+{% include 'store/search_form.html' %}
+
 {% if albums|length_is:"0" %}
 
   <div class="text-center">Aucun r&eacute;sultat !</div>
