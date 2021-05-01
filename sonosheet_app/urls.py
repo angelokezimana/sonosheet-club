@@ -20,8 +20,8 @@ from django.urls import include, re_path
 from store import views
 
 urlpatterns = [
-    re_path(r'^$', views.index),
-    re_path(r'^store/', include('store.urls')),
+    re_path(r'^$', views.index, name='home'),
+    re_path(r'^store/', include('store.urls', namespace='store')),
     re_path(r'^admin/', admin.site.urls),
 ]
 
