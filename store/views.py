@@ -1,16 +1,27 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404, render
 
 from .models import Album, Artist, Booking, Contact
 
 
 def index(request):
-    albums = Album.objects.filter(available=True).order_by('-created_at')[:10]
+    albums = Album.objects.filter(available=True).order_by('-created_at')[:9]
     return render(request, 'store/index.html', {'albums': albums})
 
 
 def listing(request):
-    albums = Album.objects.filter(available=True)
-    return render(request, 'store/listing.html', {'albums': albums})
+    albums_list = Album.objects.filter(available=True)
+    paginator = Paginator(albums_list, 9)
+    page = request.GET.get('page')
+
+    try:
+        albums = paginator.page(page)
+    except EmptyPage:
+        albums = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        albums = paginator.page(1)
+
+    return render(request, 'store/listing.html', {'albums': albums, 'paginate': True})
 
 
 def detail(request, album_id):
