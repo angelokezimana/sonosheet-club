@@ -24,23 +24,38 @@
   </div>
 
   <div class="col-sm-6 col-md-8">
-    <h6 class="text-center artist_name"><u>Réserver {{ album.title }}</u></h6>
+    <h6 class="text-center"><u>Réserver <strong>{{ album.title }}</strong></u></h6>
     <p style="margin-bottom: 20px">
-      Demandez-nous de mettre de côté {{ album.title }} et venez le chercher dès
+      Demandez-nous de mettre de côté <strong>{{ album.title }}</strong> et venez le chercher dès
       demain en magasin !
     </p>
-    <form class="form-inline" action="/" method="post">
+    <form class="form-inline" action="{% url 'store:detail' album_id=album.id %}" method="post">
+      {% csrf_token %}
+
       <div class="form-group mr-2">
-        <label for="name" class="control-label">Nom:</label>
-        <input type="text" class="form-control form-control-sm" name="name" id="name" />
+        <label for="{{ form.name.id_for_label }}" class="control-label">Nom:</label>
+        {{ form.name }}
       </div>
+
       <div class="form-group mr-2">
-        <label for="email" class="control-label">E-mail:</label>
-        <input type="email" class="form-control form-control-sm" name="email" id="email" />
+        <label for="{{ form.email.id_for_label }}" class="control-label">E-mail:</label>
+        {{ form.email }}
       </div>
+      <!-- <input type="hidden" name="album_id" value="{{ album.id }}"> -->
 
       <button type="submit" class="btn btn-sm btn-success">Réserver</button>
     </form>
+
+    {% if errors %}
+      <div>
+        {% for key, error in errors %}
+          {% autoescape off %}
+            {{ error }}
+          {% endautoescape %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
   </div>
 </div>
 
