@@ -68,3 +68,5 @@ class BookingAdmin(admin.ModelAdmin, AdminURLMixin):
     def album_link(self, booking):
         url = self.get_admin_url(booking.album)
         return mark_safe("<a href='{}'>{}</a>".format(url, booking.album.title))
+
+    album_link.short_description = "Album"
