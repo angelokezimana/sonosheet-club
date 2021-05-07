@@ -1,0 +1,20 @@
+<form
+  class="text-center"
+  action="{% url 'store:search' %}"
+  method="get"
+  accept-charset="utf-8"
+>
+  <div class="form-group">
+    <input
+      type="search"
+      name="query"
+      class="form-control form-control-sm"
+      placeholder="Chercher un disque"
+      aria-describedby="helpBlock"
+    />
+    <span class="form-text text-muted" id="helpBlock">
+      Trouvez le CD de vos rêves en tapant son titre ou le nom d'un des
+      artistes.
+    </span>
+  </div>
+</form>

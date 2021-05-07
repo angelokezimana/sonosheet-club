@@ -1,0 +1,67 @@
+<div class="text-center h2">{{ list_title }}</div>
+
+{% include 'store/search_form.html' %} 
+
+{% if albums|length_is:"0" %}
+
+<div class="text-center">Aucun r&eacute;sultat !</div>
+
+{% else %}
+
+<div class="row p-2">
+  {% for album in albums %}
+  <div class="col-sm-6 col-md-4">
+    <div class="card">
+      <a href="{% url 'store:detail' album_id=album.id %}">
+        <img
+          src="{{ album.picture }}"
+          class="card-img-top"
+          alt="{{ album.title }}"
+        />
+      </a>
+
+      <div class="card-body text-center">
+        <h5 class="card-title">
+          <a
+            href="{% url 'store:detail' album_id=album.id %}"
+            class="text-dark"
+          >
+            {{ album.title }}
+          </a>
+        </h5>
+
+        {% for artist in album.artists.all %}
+        <p class="card-text">{{ artist.name }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if paginate %}
+  <nav class="" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+
+      {% if albums.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ albums.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      {% endif %}
+
+      {% if albums.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ albums.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
+
+{% endif %}
